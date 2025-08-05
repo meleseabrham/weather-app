@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/constants/theme_constants.dart';
+import 'core/services/optimized_http_client.dart';
 import 'features/weather/data/datasources/weather_remote_data_source.dart';
 import 'features/weather/data/repositories/weather_repository_impl.dart';
 import 'features/weather/domain/usecases/get_current_weather.dart';
@@ -31,7 +32,17 @@ void main() async {
   // Initialize Hive for local storage
   await Hive.initFlutter();
   
+  // Preload common data in background
+  _preloadDataInBackground();
+  
   runApp(const WeatherApp());
+}
+
+// Preload common data in background for better performance
+void _preloadDataInBackground() {
+  Future.delayed(const Duration(seconds: 2), () {
+    OptimizedHttpClient.preloadCommonData();
+  });
 }
 
 class WeatherApp extends StatelessWidget {
@@ -41,14 +52,9 @@ class WeatherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Dio instance for HTTP requests
+        // Optimized Dio instance for HTTP requests
         Provider<Dio>(
-          create: (_) => Dio(
-            BaseOptions(
-              connectTimeout: const Duration(seconds: 30),
-              receiveTimeout: const Duration(seconds: 30),
-            ),
-          ),
+          create: (_) => OptimizedHttpClient.instance,
         ),
         
         // Weather remote data source
@@ -114,42 +120,9 @@ class WeatherApp extends StatelessWidget {
         title: AppConstants.appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          primarySwatch: Colors.blue,
+          fontFamily: 'Roboto',
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: ThemeConstants.primaryBlue,
-            brightness: Brightness.light,
-          ),
-          // fontFamily: 'Poppins',
-          appBarTheme: AppBarTheme(
-            backgroundColor: ThemeConstants.primaryBlue,
-            foregroundColor: ThemeConstants.white,
-            elevation: 0,
-            centerTitle: true,
-            titleTextStyle: ThemeConstants.heading3.copyWith(
-              color: ThemeConstants.white,
-            ),
-          ),
-          cardTheme: CardThemeData(
-            elevation: 4,
-            shadowColor: ThemeConstants.black.withOpacity(0.1),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(ThemeConstants.radiusL),
-            ),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ThemeConstants.primaryBlue,
-              foregroundColor: ThemeConstants.white,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(ThemeConstants.radiusM),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: ThemeConstants.spacingL,
-                vertical: ThemeConstants.spacingM,
-              ),
-            ),
-          ),
         ),
         home: const WeatherHomePage(),
       ),
