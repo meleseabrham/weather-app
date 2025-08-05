@@ -1,7 +1,9 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class AppConstants {
   // API Configuration
   static const String baseUrl = 'https://api.openweathermap.org/data/2.5';
-  static const String apiKey = '23f2d2acf1d24354415f71448c5a423e';
+  static String get apiKey => dotenv.env['OPENWEATHER_API_KEY'] ?? 'demo';
   static const String weatherEndpoint = '/weather';
   static const String forecastEndpoint = '/forecast';
   

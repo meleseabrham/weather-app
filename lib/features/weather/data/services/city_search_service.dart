@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../../../core/constants/app_constants.dart';
 
 class CitySearchService {
   final Dio _dio;
@@ -21,7 +22,7 @@ class CitySearchService {
         queryParameters: {
           'q': cleanQuery,
           'limit': 25, // Increased limit for better global results
-          'appid': '23f2d2acf1d24354415f71448c5a423e',
+          'appid': AppConstants.apiKey,
         },
       );
 
@@ -36,7 +37,7 @@ class CitySearchService {
             queryParameters: {
               'q': query.trim(),
               'limit': 25,
-              'appid': '23f2d2acf1d24354415f71448c5a423e',
+              'appid': AppConstants.apiKey,
             },
           );
           
@@ -68,7 +69,7 @@ class CitySearchService {
           queryParameters: {
             'q': variation,
             'limit': 1,
-            'appid': '23f2d2acf1d24354415f71448c5a423e',
+            'appid': AppConstants.apiKey,
           },
         );
 
@@ -99,7 +100,7 @@ class CitySearchService {
           queryParameters: {
             'q': variation,
             'limit': 1,
-            'appid': '23f2d2acf1d24354415f71448c5a423e',
+            'appid': AppConstants.apiKey,
           },
         );
 

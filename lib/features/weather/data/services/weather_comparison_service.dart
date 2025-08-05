@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../../../core/constants/app_constants.dart';
 
 class WeatherComparisonService {
   final Dio _dio;
@@ -31,7 +32,7 @@ class WeatherComparisonService {
         'https://api.openweathermap.org/data/2.5/weather',
         queryParameters: {
           'q': cityName,
-          'appid': '23f2d2acf1d24354415f71448c5a423e',
+          'appid': AppConstants.apiKey,
           'units': 'metric',
         },
       );

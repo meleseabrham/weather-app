@@ -20,6 +20,14 @@ import 'features/weather/data/services/nominatim_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Load environment variables safely
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print('Warning: Could not load .env file: $e');
+    print('Using default API key (demo mode)');
+  }
+  
   // Initialize Hive for local storage
   await Hive.initFlutter();
   
